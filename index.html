@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест аз Python | Токтобаев Шахром</title>
+    <!-- html2pdf для коректного PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #0f3460, #e94560, #0f3460);
+        }
+        h1 {
+            text-align: center;
+            color: #0f3460;
+            margin-bottom: 5px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .subtitle {
+            text-align: center;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        .author-badge {
+            background: #f0f0f0;
+            border-radius: 30px;
+            padding: 6px 15px;
+            font-size: 13px;
+            color: #333;
+            display: inline-block;
+            margin: 0 auto 20px;
+            text-align: center;
+            width: fit-content;
+            border: 1px solid #ddd;
+            font-weight: 500;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: 0.2s;
+            outline: none;
+        }
+        input:focus {
+            border-color: #0f3460;
+            box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+        }
+        .btn {
+            background: #0f3460;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            letter-spacing: 0.3px;
+        }
+        .btn:hover {
+            background: #1a4a80;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(15, 52, 96, 0.3);
+        }
+        .btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .timer {
+            background: #e94560;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .timer.warning {
+            background: #ff6b6b;
+            animation: pulse 0.8s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .question-block {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #0f3460;
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: #1a1a2e;
+        }
+        .options label {
+            display: block;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-weight: 400;
+            transition: 0.2s;
+        }
+        .options label:hover {
+            background: #eef2ff;
+            border-color: #0f3460;
+        }
+        .options input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        /* Сертификат */
+        .certificate {
+            background: #fffef5;
+            border: 3px double #0f3460;
+            padding: 30px;
+            text-align: center;
+            border-radius: 5px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .certificate h2 {
+            font-size: 32px;
+            color: #0f3460;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .certificate .recipient {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e94560;
+            margin: 15px 0;
+            border-bottom: 2px solid #ccc;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .certificate .details {
+            font-size: 16px;
+            color: #333;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        .certificate .score {
+            font-size: 36px;
+            font-weight: 800;
+            color: #0f3460;
+            margin: 15px 0;
+        }
+        .certificate .footer-cert {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        .error-msg {
+            background: #ffe3e3;
+            color: #c0392b;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+            border: 1px solid #e74c3c;
+            display: none;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-outline {
+            background: white;
+            border: 2px solid #0f3460;
+            color: #0f3460;
+        }
+        .btn-outline:hover {
+            background: #f0f4ff;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                max-width: 100%;
+            }
+            .container::before { display: none; }
+            .btn, .timer, #timerBlock { display: none !important; }
+            .certificate {
+                border: 3px solid #000;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Тест аз Python</h1>
+        <div class="subtitle">Дониши худро санҷед • 30 дақиқа • 20 савол</div>
+        <div class="author-badge" style="display: block; text-align: center;">Муаллиф: Токтобаев Шахром</div>
+
+        <!-- ЭКРАНИ БАҚАЙДГИРӢ -->
+        <div id="registerScreen" class="screen active">
+            <h3 style="text-align: center; margin-bottom: 20px;">📋 Бақайдгирӣ</h3>
+            <div class="form-group">
+                <label>Ном</label>
+                <input type="text" id="firstName" placeholder="Номи худро ворид кунед">
+            </div>
+            <div class="form-group">
+                <label>Фамилия</label>
+                <input type="text" id="lastName" placeholder="Фамилияи худро ворид кунед">
+            </div>
+            <div id="regError" class="error-msg">Лутфан, ҳарду майдонро пур кунед!</div>
+            <button class="btn" id="startTestBtn">✅ Бақайдгирӣ ва оғози тест</button>
+            <p style="text-align: center; font-size: 12px; color: #888; margin-top: 15px;">
+                Маълумот ба таври худкор дар сертификат сабт мешавад. Муаллифи тест — Токтобаев Шахром.
+            </p>
+        </div>
+
+        <!-- ЭКРАНИ ТЕСТ -->
+        <div id="testScreen" class="screen">
+            <div id="timerBlock" style="text-align: center;">
+                <span class="timer" id="timerDisplay">30:00</span>
+            </div>
+            <div id="questionsContainer"></div>
+            <div id="testError" class="error-msg">Шумо ба ҳамаи саволҳо ҷавоб надодед! Майдонҳои қайдшударо тафтиш кунед.</div>
+            <div class="btn-group">
+                <button class="btn" id="finishTestBtn">🏁 Анҷом додани тест</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАНИ СЕРТИФИКАТ -->
+        <div id="certificateScreen" class="screen">
+            <div class="certificate" id="certificateContent">
+                <h2>СЕРТИФИКАТ</h2>
+                <p style="font-size: 14px; color: #555;">дар бораи бомуваффақият супоридани тест аз Python</p>
+                <div class="recipient" id="certName">—</div>
+                <div class="details">
+                    Тест дар давоми 30 дақиқа анҷом ёфт.<br>
+                    Миқдори ҷавобҳои дуруст:
+                </div>
+                <div class="score" id="certScore">0 / 20</div>
+                <div class="details" id="certPercentage">Натиҷа: 0%</div>
+                <div class="footer-cert">
+                    <strong>Муаллифи тест: Токтобаев Шахром</strong><br>
+                    Сана: <span id="certDate"></span><br>
+                    Ин сертификат ба таври автоматӣ тавлид шудааст.
+                </div>
+            </div>
+            <div class="btn-group" style="margin-top: 20px;">
+                <button class="btn" id="printBtn">🖨️ Чоп кардани сертификат</button>
+                <button class="btn btn-outline" id="downloadPdfBtn">⬇️ Боргирии PDF сертификат</button>
+            </div>
+            <button class="btn btn-outline" id="retryBtn" style="margin-top: 10px;">🔄 Аз нав супоридани тест</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 20 савол дар бораи Python (ба тоҷикӣ)
+            const questions = [
+                { question: "1. Python чи гуна забони барноманависӣ аст?", options: ["Компилятсияшаванда", "Интерпретатсияшаванда", "Танҳо барои веб", "Ассемблерӣ"], correct: 1 },
+                { question: "2. Барои чоп кардани матн кадом функсия истифода мешавад?", options: ["echo()", "print()", "write()", "console.log()"], correct: 1 },
+                { question: "3. Калимаи калидӣ барои эҷоди функсия дар Python?", options: ["func", "def", "function", "create"], correct: 1 },
+                { question: "4. Натиҷаи 3 ** 2 чист?", options: ["6", "9", "8", "5"], correct: 1 },
+                { question: "5. Рӯйхат (list) дар Python бо кадом қавсҳо сохта мешавад?", options: ["{}", "()", "[]", "<>"], correct: 2 },
+                { question: "6. Барои гирифтани дарозии рӯйхат кадом функсия кор фармуда мешавад?", options: ["len()", "size()", "length()", "count()"], correct: 0 },
+                { question: "7. Типи маълумот bool кадом ду қиматро қабул мекунад?", options: ["True, False", "Yes, No", "1, 0", "On, Off"], correct: 0 },
+                { question: "8. Амалгари '!=' чиро ифода мекунад?", options: ["Баробарӣ", "Нобаробарӣ", "Тақсим", "Зарб"], correct: 1 },
+                { question: "9. Калимаи калидӣ барои сохтани шарт дар Python?", options: ["when", "if", "case", "switch"], correct: 1 },
+                { question: "10. Давраи for дар Python барои чӣ истифода мешавад?", options: ["Танҳо барои ададҳо", "Такрори амалҳо", "Таърифи тағйирёбанда", "Ҳеҷ кадом"], correct: 1 },
+                { question: "11. Чӣ тавр мо як сатри холиро дар Python эҷод мекунем?", options: ['""', "''", '"" ё \'\'', "null"], correct: 2 },
+                { question: "12. Натиҷаи 'Hello' + ' ' + 'World' чист?", options: ["HelloWorld", "Hello World", "Hello+World", "Хатогӣ"], correct: 1 },
+                { question: "13. Индекси аввал дар рӯйхат чанд аст?", options: ["1", "0", "-1", "2"], correct: 1 },
+                { question: "14. Калимаи калидӣ 'import' барои чӣ аст?", options: ["Содироти матн", "Ворид кардани модул", "Ҳазфи тағйирёбанда", "Эҷоди синф"], correct: 1 },
+                { question: "15. Функсияи range(5) чӣ кор мекунад?", options: ["Аз 1 то 5", "Аз 0 то 4", "Аз 0 то 5", "Аз 1 то 6"], correct: 1 },
+                { question: "16. Барои табдил додани сатр ба адад кадом функсия аст?", options: ["int()", "str()", "float()", "bool()"], correct: 0 },
+                { question: "17. 'None' дар Python чиро ифода мекунад?", options: ["Сифр", "Холӣ", "Қимати номавҷуд", "Хатогӣ"], correct: 2 },
+                { question: "18. Барои таърифи синф калимаи калидӣ кадом аст?", options: ["struct", "class", "object", "type"], correct: 1 },
+                { question: "19. Dictionary дар Python бо кадом қавсҳо сохта мешавад?", options: ["[]", "{}", "()", "<>"], correct: 1 },
+                { question: "20. Кадом метод барои илова кардани элемент ба охири рӯйхат истифода мешавад?", options: [".add()", ".append()", ".insert()", ".push()"], correct: 1 }
+            ];
+
+            let timerInterval = null;
+            let timeLeft = 30 * 60; // 30 дақиқа
+            let userFirstName = '';
+            let userLastName = '';
+
+            const registerScreen = document.getElementById('registerScreen');
+            const testScreen = document.getElementById('testScreen');
+            const certificateScreen = document.getElementById('certificateScreen');
+            const firstNameInput = document.getElementById('firstName');
+            const lastNameInput = document.getElementById('lastName');
+            const regError = document.getElementById('regError');
+            const testError = document.getElementById('testError');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const questionsContainer = document.getElementById('questionsContainer');
+            const certName = document.getElementById('certName');
+            const certScore = document.getElementById('certScore');
+            const certPercentage = document.getElementById('certPercentage');
+            const certDate = document.getElementById('certDate');
+
+            function showScreen(screen) {
+                registerScreen.classList.remove('active');
+                testScreen.classList.remove('active');
+                certificateScreen.classList.remove('active');
+                screen.classList.add('active');
+            }
+
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function updateTimerDisplay() {
+                timerDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 300) {
+                    timerDisplay.parentElement.classList.add('warning');
+                } else {
+                    timerDisplay.parentElement.classList.remove('warning');
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishTest(true);
+                }
+            }
+
+            function startTimer() {
+                timeLeft = 30 * 60;
+                updateTimerDisplay();
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+
+            function renderQuestions() {
+                questionsContainer.innerHTML = '';
+                questions.forEach((q, index) => {
+                    const block = document.createElement('div');
+                    block.className = 'question-block';
+                    block.id = `question-${index}`;
+                    block.innerHTML = `
+                        <div class="question-text">${q.question}</div>
+                        <div class="options">
+                            ${q.options.map((opt, optIndex) => `
+                                <label>
+                                    <input type="radio" name="q${index}" value="${optIndex}">
+                                    ${opt}
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                    questionsContainer.appendChild(block);
+                });
+            }
+
+            function collectAnswers() {
+                const answers = [];
+                let allAnswered = true;
+                questions.forEach((q, index) => {
+                    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                    if (selected) {
+                        answers.push(parseInt(selected.value));
+                    } else {
+                        answers.push(null);
+                        allAnswered = false;
+                    }
+                });
+                return { answers, allAnswered };
+            }
+
+            function highlightUnanswered() {
+                questions.forEach((q, index) => {
+                    const block = document.getElementById(`question-${index}`);
+                    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                    if (!selected) {
+                        block.style.borderLeftColor = '#e94560';
+                        block.style.backgroundColor = '#fff5f5';
+                    } else {
+                        block.style.borderLeftColor = '#0f3460';
+                        block.style.backgroundColor = '#f8f9fa';
+                    }
+                });
+            }
+
+            function calculateScore(answers) {
+                let correctCount = 0;
+                answers.forEach((ans, idx) => {
+                    if (ans === questions[idx].correct) correctCount++;
+                });
+                return correctCount;
+            }
+
+            function finishTest(forcedByTimer = false) {
+                clearInterval(timerInterval);
+                const { answers, allAnswered } = collectAnswers();
+
+                if (!forcedByTimer && !allAnswered) {
+                    testError.style.display = 'block';
+                    highlightUnanswered();
+                    timerInterval = setInterval(() => {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    }, 1000);
+                    return;
+                }
+                testError.style.display = 'none';
+                const score = calculateScore(answers);
+                const total = questions.length;
+                const percent = Math.round((score / total) * 100);
+
+                certName.textContent = `${userLastName} ${userFirstName}`;
+                certScore.textContent = `${score} / ${total}`;
+                certPercentage.textContent = `Натиҷа: ${percent}%`;
+                const now = new Date();
+                certDate.textContent = now.toLocaleDateString('tg-TJ', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }) + ' ' + now.toLocaleTimeString('tg-TJ', { hour: '2-digit', minute: '2-digit' });
+
+                showScreen(certificateScreen);
+            }
+
+            function resetTest() {
+                clearInterval(timerInterval);
+                timeLeft = 30 * 60;
+                updateTimerDisplay();
+                timerDisplay.parentElement.classList.remove('warning');
+                renderQuestions();
+                testError.style.display = 'none';
+                showScreen(registerScreen);
+            }
+
+            // Функсияи боргирии PDF – КАФОЛАТИ ЯКЛУХТ БУДАН
+            function downloadPDF() {
+                const element = document.getElementById('certificateContent');
+                const opt = {
+                    margin:       0.3,
+                    filename:     'Сертификат_Python.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { 
+                        scale: 2, 
+                        backgroundColor: '#fffef5',
+                        windowWidth: 800   // фиксированная ширина, чтобы не обрезалось
+                    },
+                    jsPDF:        { 
+                        unit: 'in', 
+                        format: 'a4', 
+                        orientation: 'portrait' 
+                    },
+                    pagebreak:    { mode: ['avoid-all'] }  // запрещаем разрывы внутри элемента
+                };
+                html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+                    // Дополнительная проверка: если контент больше одной страницы – уменьшаем масштаб
+                    const totalPages = pdf.internal.getNumberOfPages();
+                    if (totalPages > 1) {
+                        // Пересоздаём с меньшим масштабом
+                        html2pdf().set({
+                            ...opt,
+                            html2canvas: { scale: 1.5, backgroundColor: '#fffef5', windowWidth: 800 },
+                            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                        }).from(element).save();
+                    } else {
+                        pdf.save('Сертификат_Python.pdf');
+                    }
+                });
+            }
+
+            document.getElementById('startTestBtn').addEventListener('click', () => {
+                const fn = firstNameInput.value.trim();
+                const ln = lastNameInput.value.trim();
+                if (!fn || !ln) {
+                    regError.style.display = 'block';
+                    return;
+                }
+                regError.style.display = 'none';
+                userFirstName = fn;
+                userLastName = ln;
+                localStorage.setItem('testUser', JSON.stringify({ firstName: fn, lastName: ln }));
+                renderQuestions();
+                startTimer();
+                showScreen(testScreen);
+            });
+
+            document.getElementById('finishTestBtn').addEventListener('click', () => {
+                finishTest(false);
+            });
+
+            document.getElementById('printBtn').addEventListener('click', () => {
+                window.print();
+            });
+
+            document.getElementById('downloadPdfBtn').addEventListener('click', downloadPDF);
+
+            document.getElementById('retryBtn').addEventListener('click', resetTest);
+
+            const saved = localStorage.getItem('testUser');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.firstName) firstNameInput.value = parsed.firstName;
+                    if (parsed.lastName) lastNameInput.value = parsed.lastName;
+                } catch (e) {}
+            }
+        })();
+    </script>
+</body>
+</html>
